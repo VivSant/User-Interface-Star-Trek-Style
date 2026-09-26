@@ -1,0 +1,18 @@
+# Line Ending Normalization --resolves linux+windows dev conflict
+* text=auto eol=lf
+# binary image files --less annoying diffs --git cannot auto-merge these
+*.png binary
+*.ico binary
+*.jpg binary
+*.webp binary
+*.jpeg binary
+*.gif binary
+# binary ui fonts --prevents corruption
+*.ttf binary
+*.woff binary
+*.otf binary
+*.woff2 binary
+
+
+# This was built by referencing Kivy a popular open-source Python GUI framework. You can find it here:
+# https://github.com/kivy/kivy/blob/master/.gitattributes

@@ -1,0 +1,37 @@
+# no .class files, compiled code, compiled release artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+*.egg-info/
+*.egg
+
+# no vm output, BA mentioned using vm
+.venv/
+venv/
+env/
+ENV/
+
+# no secrets --passwords APIkeys tokens privateKeys env
+.env
+*.pem
+*.key
+secrets.json
+
+# no OS / Junk / IDE folders --mac windows pycharm spyder vscode eclipse
+.DS_Store
+Thumbs.db
+.idea/
+.spyderproject
+.vscode/
+.classpath
+.project
+.settings/
+.metadata/
+
+
+
+# This was built by referencing GitHub's official Python.gitignore. You can find it here: 
+# https://github.com/github/gitignore/blob/main/Python.gitignore
