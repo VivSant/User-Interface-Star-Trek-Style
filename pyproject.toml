@@ -1,0 +1,20 @@
+[tool.black]
+line-length = 88
+target-version = ['py311']
+
+[tool.ruff]
+line-length = 88
+exclude = [".git", ".venv", "__pycache__", "build", "dist"]
+
+# E: pycodestyle F: Pyflakes I: isort N: pep8 (snake_case and PascalCase)
+# D: pydocstyle (docstring formatting)
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "D"]
+ignore = []
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+
+# This was built by referencing FastAPI's pyproject.toml.
+# Find it here: https://github.com/fastapi/fastapi/blob/master/pyproject.toml

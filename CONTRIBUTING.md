@@ -18,4 +18,5 @@ Given the heavy modularity required for a custom graphical interface, strict nam
 
 
 
-This CONTRIBUTING.MD was built by referencing the Pandas library documentation.You can find it here: https://pandas.pydata.org/docs/dev/development/contributing_codebase.html
+This was built by referencing the Pandas library documentation.
+Find it here: https://pandas.pydata.org/docs/dev/development/contributing_codebase.html
