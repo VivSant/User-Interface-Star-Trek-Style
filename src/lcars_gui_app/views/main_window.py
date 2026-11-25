@@ -2,10 +2,8 @@
 
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
-<<<<<<< HEAD
-=======
+from lcars_gui_app.views.components.nav_button import NavButton
 from lcars_gui_app.views.components.bottom_bar import BottomBar
->>>>>>> 7c3c1b8 (feat: add BottomBar with POWER button)
 from lcars_gui_app.viewmodels.telemetry_vm import TelemetryViewModel
 from lcars_gui_app.views.layout_tokens import GAP_COMPACT, LCARS_BG, LayoutTier
 from lcars_gui_app.views.outer_shell import LcarsOuterShell
@@ -45,11 +43,40 @@ class LcarsMainWindow(QMainWindow):
         host_layout.setContentsMargins(0, 0, 0, 0)
         host_layout.setSpacing(GAP_COMPACT)
 
-<<<<<<< HEAD
+        #Top status headr
         self.status_header = LcarsStatusHeader(self.viewmodel, host)
         host_layout.addWidget(self.status_header)
-        host_layout.addWidget(self.outer_shell, stretch=1)
-=======
+        
+        #Middle section: Left Navigation and Main content
+        middle = QHBoxLayout()
+        middle.setSpacing(6)
+
+        #Left Navigation
+        nav_layout = QVBoxLayout()
+        nav_layout.setSpacing(6)
+
+        self.btn_file = NavButton("File Manager", "#4A9EFF")
+        self.btn_devices = NavButton("Devices", "#E8E8F0")
+        self.btn_network = NavButton("Network\nOptions", "#FFCC99")
+        self.btn_settings = NavButton("Settings", "#FF9933")
+
+        nav_layout.addWidget(self.btn_file)
+        nav_layout.addWidget(self.btn_devices)
+        nav_layout.addWidget(self.btn_network)
+        nav_layout.addWidget(sef.btn_settings)
+        nav_layout.addStretch()
+
+        self.btn_file.clicked.connect(lambda: print("File Manager clicked"))
+        self.btn_devices.clicked.connect(lambda: print("Devices clicked"))
+        self.btn_network.clicked.connect(lambda: print("Network Options clicked"))
+        self.btn_settings.clicked.connect(lambda: print("Settings clicked"))
+
+        middle.addLayout(nav_layout)
+        middle.addWidget(self.outer_shell, stretch=1)
+
+        host_layout.addLayout(middle, stretch=1)
+
+        #Bottom bar
         self.bottom_bar = BottomBar()
 self.bottom_bar.power_clicked.connect(self._on_power_clicked)
         host_layout.addWidget(self.bottom_bar)
