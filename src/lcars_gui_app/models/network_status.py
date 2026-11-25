@@ -1,22 +1,29 @@
-"""Network Connectivity model"""
+"""Network Connectivity model."""
 
-from dataclasses import dataclassesfrom enum import Enum, auto
 import socket
+from dataclasses import dataclass
+from enum import Enum, auto
 from typing import Optional
 
+
 class ConnectionState(Enum):
+    """Represents the state of network connectivity."""
+
     CONNECTED = auto()
     DISCONNECTED = auto()
     CHECKING = auto()
 
+
 @dataclass
-class etworkStatus:
+class NetworkStatus:
+    """Represents the network connectivity status."""
+
     state: ConnectionState = ConnectionState.CHECKING
     local_ip: Optional[str] = None
     message: str = "Checking..."
 
     def refresh(self) -> None:
-        """Checks real connectivity and updates the status"""
+        """Checks real connectivity and updates the status."""
         try:
             # Quick connectivity test
             socket.create_connection(("8.8.8.8", 53), timeout=1.5)
@@ -27,6 +34,7 @@ class etworkStatus:
             self.state = ConnectionState.DISCONNECTED
             self.message = "Disconnected"
             self.local_ip = None
+
     def _get_local_ip(self) -> Optional[str]:
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
