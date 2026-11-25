@@ -1,10 +1,10 @@
-Automated Formatting & Static Analysis (PEP 8)
+Automated Formatting & Static Analysis (PEP 8):
 To eliminate stylistic bikeshedding and ensure strict PEP 8 compliance, we have abstracted all code formatting and linting to Black and Ruff. This deterministic pipeline is enforced locally via pre-commit hooks, guaranteeing that no poorly formatted code enters the version control history. All contributors must execute pre-commit install in their local environment before staging their first commit.
 
-Interface & Logic Documentation
+Interface & Logic Documentation:
 For optimal codebase maintainability and to support future automated documentation generation, we are standardizing on Google-style docstrings. Every class and function, especially custom UI widgets and state altering methods, must include a concise behavioral summary, explicitly defined paramters under an Args: block and expected outputs under a Returns: block
 
-Lexical Naming Conventions
+Lexical Naming Conventions:
 Given the heavy modularity required for a custom graphical interface, strict namespace rules are critical for readability and separating logic from presentation:
 
     Class Definitions:
