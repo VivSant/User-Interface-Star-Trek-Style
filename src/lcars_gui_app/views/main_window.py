@@ -108,6 +108,7 @@ self.panel_grid.set_tier(self.outer_shell.active_tier)
 
         self.audio = AudioEngine()
         self.audio.load("boot_1", "boot_1.wav")
+        self.audio.load("power", "power.wav")
 
         self.boot = BootSequence(self.audio)
 
@@ -124,6 +125,7 @@ self.boot.message_changed.connect(self._on_boot_message)
         self.panel_grid.set_tier(tier)
     
     def _on_power_clicked(self):
+        self.audio.play("power")
         print("POWER pressed")
 
     def _on_boot_message(self, message: str):
