@@ -1,51 +1,63 @@
-"""Main window view for the LCARS GUI application."""
+"""Main Window for the LCARS GUI application."""
 
-from PySide6.QtCore import Slot
-from PySide6.QtWidgets import QLabel, QMainWindow, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
 from lcars_gui_app.viewmodels.telemetry_vm import TelemetryViewModel
-from lcars_gui_app.views.components.status_bar import StatusBar
+from lcars_gui_app.views.layout_tokens import GAP_COMPACT, LCARS_BG, LayoutTier
+from lcars_gui_app.views.outer_shell import LcarsOuterShell
+from lcars_gui_app.views.panel_grid import LcarsPanelGrid
+from lcars_gui_app.views.status_header import LcarsStatusHeader
 
 
 class LcarsMainWindow(QMainWindow):
-    """Declarative ui root leveraging Qt's main window framework."""
+    """Main LCARS application window bound to TelemetryViewModel."""
 
-    def __init__(self, viewmodel: TelemetryViewModel):
-        """Initialize the main window with its telemetry view model."""
-        super().__init__()
-        self._viewmodel = viewmodel
+    def __init__(
+        self,
+        viewmodel: TelemetryViewModel,
+        panel_grid: LcarsPanelGrid | None = None,
+        parent: QWidget | None = None,
+    ) -> None:
+        """Initialize the main window with the ViewModel and outer LCARS shell.
 
+        Args:
+            viewmodel: ViewModel supplying telemetry and UI state.
+            panel_grid: Optional responsive panel grid hosted inside the shell.
+            parent: Optional parent widget.
+        """
+        super().__init__(parent)
         self.setWindowTitle("LCARS Main Terminal")
-        self.resize(1920, 1080)  # Target screen resolution
-        self.setStyleSheet("background-color: #000000;")  # LCARS black background
+        self.setStyleSheet(f"background-color: {LCARS_BG};")
 
-        # Central layout
-        container = QWidget()
-        self.setCentralWidget(container)
+        self.viewmodel = viewmodel
+        self.panel_grid = panel_grid or LcarsPanelGrid(self)
+        self.outer_shell = LcarsOuterShell(self)
+        self.outer_shell.set_content_widget(self.panel_grid)
 
-        layout = QVBoxLayout(container)
-        layout.setContentsMargins(8, 8, 8, 8)
-        layout.setSpacing(6)
+        host = QWidget(self)
+        host.setObjectName("lcarsWindowHost")
+        host.setStyleSheet(f"background-color: {LCARS_BG};")
 
-        self.status_bar = StatusBar()
-        layout.addWidget(self.status_bar)
+        host_layout = QVBoxLayout(host)
+        host_layout.setContentsMargins(0, 0, 0, 0)
+        host_layout.setSpacing(GAP_COMPACT)
 
-        self.temp_label = QLabel("CORE TEMP: OFFLINE")
-        self.temp_label.setStyleSheet(
-            "color: #FF9900; font-size: 24px; font-weight: bold;"
-        )
-        layout.addWidget(self.temp_label)
+        self.status_header = LcarsStatusHeader(self.viewmodel, host)
+        host_layout.addWidget(self.status_header)
+        host_layout.addWidget(self.outer_shell, stretch=1)
+        self.setCentralWidget(host)
 
-        # Strech so the content stays at the top
-        layout.addStretch()
+        self.outer_shell.tier_changed.connect(self._on_layout_tier_changed)
+        if self.outer_shell.active_tier is not None:
+            self.panel_grid.set_tier(self.outer_shell.active_tier)
 
-        # connect viewmodel updates
-        self._viewmodel.display_temp_changed.connect(self.update_temp_display)
+    def _on_layout_tier_changed(self, tier: LayoutTier) -> None:
+        """Reflow panels when LcarsOuterShell transitions to a new tier.
 
-    @Slot(str)
-    def update_temp_display(self, formatted_temp: str):
-        """Update the label text when the ViewModel emits new state."""
-        self.temp_label.setText(formatted_temp)
+        Args:
+            tier: Newly active LayoutTier.
+        """
+        self.panel_grid.set_tier(tier)
 
 
 # This was built by referencing PySide6 QMainWindow, find it here:
