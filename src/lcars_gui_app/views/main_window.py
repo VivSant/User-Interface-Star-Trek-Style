@@ -3,8 +3,8 @@
 from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QLabel, QMainWindow, QVBoxLayout, QWidget
 
-from lcars_gui_app.views.components.status_bar import StatusBar
 from lcars_gui_app.viewmodels.telemetry_vm import TelemetryViewModel
+from lcars_gui_app.views.components.status_bar import StatusBar
 
 
 class LcarsMainWindow(QMainWindow):
@@ -17,9 +17,9 @@ class LcarsMainWindow(QMainWindow):
 
         self.setWindowTitle("LCARS Main Terminal")
         self.resize(1920, 1080)  # Target screen resolution
-        self.setStyleSheet("background-color: #000000;") #LCARS black background
+        self.setStyleSheet("background-color: #000000;")  # LCARS black background
 
-        #Central layout
+        # Central layout
         container = QWidget()
         self.setCentralWidget(container)
 
@@ -36,11 +36,11 @@ class LcarsMainWindow(QMainWindow):
         )
         layout.addWidget(self.temp_label)
 
-        #Strech so the content stays at the top
+        # Strech so the content stays at the top
         layout.addStretch()
 
-# connect viewmodel updates
-self._viewmodel.display_temp_changed.connect(self.update_temp_display)
+        # connect viewmodel updates
+        self._viewmodel.display_temp_changed.connect(self.update_temp_display)
 
     @Slot(str)
     def update_temp_display(self, formatted_temp: str):

@@ -1,44 +1,62 @@
-"""Initialize and launch the LCARS-style telemetry application."""
+"""Entry point for the LCARS GUI application.
+
+This module initializes the application, sets up the main window,
+and starts the telemetry collection.
+It uses PySide6 for the GUI and psutil for system telemetry data collection.
+"""
+
+from __future__ import annotations
 
 import sys
 
-from PySide6.QtWidgets import QApplication, QHBoxLayout, QWidget
+from PySide6.QtCore import QTimer
+from PySide6.QtWidgets import QApplication
 
-# mvvm components
-from lcars_gui_app.models.telemetry import TelemetryModel
+from lcars_gui_app.models.telemetry import (
+    LatestSnapshotMailbox,
+    TelemetrySnapshot,
+    TieredPsutilCollector,
+)
 from lcars_gui_app.viewmodels.telemetry_vm import TelemetryViewModel
-
-# qt components
-from lcars_gui_app.views.components.file_explorer import FileExplorerPanel
 from lcars_gui_app.views.main_window import LcarsMainWindow
 
 
-def main():
-    """Initialize the application and launch the main window."""
+def main() -> int:
+    """Entry point for the LCARS GUI application."""
     app = QApplication(sys.argv)
 
-    # mvvm initialization
-    telemetry_model = TelemetryModel()
-    telemetry_vm = TelemetryViewModel(telemetry_model)
+    mailbox = LatestSnapshotMailbox()
+    collector = TieredPsutilCollector(mailbox=mailbox)
 
-    # ui initialization
-    main_window = LcarsMainWindow(telemetry_vm)
-    file_explorer = FileExplorerPanel()
+    # Pass mailbox/collector into MainWindow (or your viewmodel)
+    window = LcarsMainWindow(viewmodel=TelemetryViewModel())
+    window.show()
 
-    # combine for proof of concept
-    central_widget = QWidget()
-    layout = QHBoxLayout(central_widget)
-    layout.addWidget(file_explorer)
-    layout.addWidget(main_window.centralWidget())
-    main_window.setCentralWidget(central_widget)
+    poll_timer = QTimer()
+    poll_timer.setInterval(250)
 
-    main_window.show()
-    sys.exit(app.exec())
+    def _on_ui_tick() -> None:
+        snapshot: TelemetrySnapshot | None = mailbox.consume()
+        if snapshot is None:
+            return
+        # Update MainWindow / telemetry_vm from `snapshot`
+
+    poll_timer.timeout.connect(_on_ui_tick)
+    poll_timer.start()
+
+    def _shutdown() -> None:
+        poll_timer.stop()
+        collector.stop(timeout_s=2.0)
+
+    app.aboutToQuit.connect(_shutdown)
+    collector.start()
+
+    return app.exec()
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
 
 
-# This was built by referencing PySide6 QApplication Initialization, find it here:
-# https://doc.qt.io/qtforpython-6/PySide6/QtWidgets/QApplication.html
+# Built by referencing the official psutil & PySide6 documentation
+# https://psutil.readthedocs.io/ and https://doc.qt.io/qtforpython-6/PySide6/QtCore/QTimer.html
