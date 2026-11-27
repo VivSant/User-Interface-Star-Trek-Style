@@ -22,8 +22,8 @@ class BottomBar(QWidget):
         self.power_btn = QPushButton("POWER")
         self.power_btn.setFixedWidth(150)
         self.power_btn.setStyleSheet(
-            """QPushButton { background: transparent; color: #FF2222; font_size: 26px;
-            font_weight: bold; border: none;} QPushButton:hover { color: #FF6666;}"""
+            """QPushButton { background: transparent; color: #FF2222; font-size: 26px;
+            font-weight: bold; border: none;} QPushButton:hover { color: #FF6666;}"""
         )
 
         self.power_btn.clicked.connect(self.power_clicked.emit)
