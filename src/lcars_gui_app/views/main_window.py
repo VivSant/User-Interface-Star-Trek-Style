@@ -1,14 +1,19 @@
 """Main Window for the LCARS GUI application."""
 
-from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QVBoxLayout, QWidget
+from PySide6.QtWidgets import (
+    QHBoxLayout,
+    QMainWindow,
+    QStackedWidget,
+    QVBoxLayout,
+    QWidget,
+)
 
 from lcars_gui_app.core.audio_engine import AudioEngine
 from lcars_gui_app.core.boot_sequence import BootSequence
-
-# from lcars_gui_app.views.components.simple_panel import SimplePanel
 from lcars_gui_app.viewmodels.telemetry_vm import TelemetryViewModel
 from lcars_gui_app.views.components.bottom_bar import BottomBar
 from lcars_gui_app.views.components.nav_button import NavButton
+from lcars_gui_app.views.components.simple_panel import SimplePanel
 from lcars_gui_app.views.layout_tokens import GAP_COMPACT, LCARS_BG, LayoutTier
 from lcars_gui_app.views.outer_shell import LcarsOuterShell
 from lcars_gui_app.views.panel_grid import LcarsPanelGrid
@@ -73,12 +78,12 @@ class LcarsMainWindow(QMainWindow):
 
         middle.addLayout(nav_layout)
 
-        #        self.stack = QStackedWidgets()
-        #        self.stack.addWidget(SimplePanel("HOME / DASHBOARD"))
-        #        self.stack.addWidget(SimplePanel("FILE MANAGER"))
-        #        self.stack.addWidget(SimplePanel("DEVICES"))
-        #        self.stack.addWidget(SimplePanel("NETWORK OPTIONS"))
-        #        self.stack.addWidget(SimplePanel("SETTINGS"))
+        self.stack = QStackedWidget()
+        self.stack.addWidget(SimplePanel("HOME / DASHBOARD"))
+        self.stack.addWidget(SimplePanel("FILE MANAGER"))
+        self.stack.addWidget(SimplePanel("DEVICES"))
+        self.stack.addWidget(SimplePanel("NETWORK OPTIONS"))
+        self.stack.addWidget(SimplePanel("SETTINGS"))
 
         middle.addWidget(self.stack, stretch=1)
 

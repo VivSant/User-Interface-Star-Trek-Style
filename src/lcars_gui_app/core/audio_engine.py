@@ -3,16 +3,16 @@
 from pathlib import Path
 from typing import Dict
 
-from PyQt6.QtCore import Qobject, QUrl
-from PyQt6.QtMultimedia import QSoundEffect
+from PySide6.QtCore import QObject, QUrl
+from PySide6.QtMultimedia import QSoundEffect
 
 
-class AudioEngine(Qobject):
+class AudioEngine(QObject):
     """Simple sound manager."""
 
-    def __int__(self, parent=None):
+    def __init__(self, parent=None):
         """Initialize the audio engine."""
-        super().__int__(parent)
+        super().__init__(parent)
         self._effects: Dict[str, QSoundEffect] = {}
         # Goes up from core/ -> lcars_gui_app/ -> src/ -> project root
 
@@ -29,7 +29,7 @@ class AudioEngine(Qobject):
         effect = QSoundEffect(self)
         effect.setSource(QUrl.fromLocalFile(str(path)))
         effect.setVolume(max(0.0, min(1.0, volume)))
-        effect.set.LoopCount(1)
+        effect.setLoopCount(1)
 
         self._effects[name] = effect
 
